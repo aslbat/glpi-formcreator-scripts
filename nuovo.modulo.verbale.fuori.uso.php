@@ -22,6 +22,7 @@ $out_test = STDOUT; // su standard out
 //$out_test = null; // nessun log
 fwrite($out_test, "Creazione automatica modulo verbale fuori uso.....\n\n");
 
+// Numero di sezioni apparecchiatura da creare
 $NUMERO_SEZIONI_APPARECCHIATURA = 10;
 
 // instanciate classes
@@ -127,11 +128,7 @@ for($i=1; $i <= $NUMERO_SEZIONI_APPARECCHIATURA; $i++) {
          'default_values'=>'',
          'description'=> $campo_apparecchiatura['descrizione'],
          # senza _parameters mi da errore nel creare la domanda e non me la crea
-         '_parameters'     =>
-            ['text' => [ 
-               'range' => [ 'range_min' => '', 'range_max' => '' ],
-               'regex' => [ 'regex' => '' ]
-            ]]
+         '_parameters' => ['text'=>['range'=>['range_min'=>'','range_max'=>''],'regex'=>['regex'=>'']]]
       ]);
       
 
@@ -151,7 +148,7 @@ for($i=1; $i <= $NUMERO_SEZIONI_APPARECCHIATURA; $i++) {
       $condition        = new PluginFormcreatorCondition();
       $condition->add([
          'itemtype'                        => \PluginFormcreatorSection::class, //$section_apparecchiatura_obj->getType()
-         'items_id'                        => $section_apparecchiatura_id, //vedere se vuole id o uuid
+         'items_id'                        => $section_apparecchiatura_id,
          'plugin_formcreator_questions_id' => $question_id_marca_sezione_precedente,
          'show_condition'                  => \PluginFormcreatorCondition::SHOW_CONDITION_NE,
          'show_value'                      => "",
