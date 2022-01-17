@@ -18,7 +18,7 @@ if (!(new Plugin())->isActivated('formcreator')) {
 }
 
 $out_test = STDOUT; // su standard out
-//$out_test = fopen("/tmp/NICOLAAAAAAAAAAA.txt", "a"); // su file
+//$out_test = fopen("/tmp/log-formcreator-script.txt", "a"); // su file
 //$out_test = null; // nessun log
 fwrite($out_test, "Creazione automatica modulo verbale fuori uso.....\n\n");
 
@@ -36,11 +36,59 @@ $form_id = $form->add([
    //'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER
 ]);
 
+#
+# SEZIONE VERBALE FUORI USO
+#
 $section_verbale_id = $form_section->add([
    'name'                        => "Verbale fuori uso",
    'plugin_formcreator_forms_id' => $form_id
 ]);
 
+$template_question = [
+   'name'                           => '--NAME--',
+   'fieldtype'                      => 'text',
+   'plugin_formcreator_sections_id' => false,
+   'description'                    => '--DESC--',
+   'required' => 1,
+   'show_empty' => 0,
+   'default_values'=>'',
+   # senza _parameters mi da errore nel creare la domanda e non me la crea
+   '_parameters' => ['text'=>['range'=>['range_min'=>'','range_max'=>''],'regex'=>['regex'=>'']]]
+];
+
+// data
+$form_question->add(
+   array_merge($template_question, [
+      'name'                           => 'Data verbale',
+      'fieldtype'                      => 'date',
+      'plugin_formcreator_sections_id' => $section_verbale_id,
+      'description'=> '&lt;p&gt;Data del verbale&lt;/p&gt;'
+   ])
+);
+
+// luogo
+$form_question->add(
+   array_merge($template_question, [
+      'name'                           => 'Luogo',
+      'fieldtype'                      => 'text',
+      'plugin_formcreator_sections_id' => $section_verbale_id,
+      'description'=> '&lt;p&gt;Indicazione dei locali dove si trovano le apparecchiature da dismettere&lt;/p&gt;'
+   ])
+);
+
+// struttura
+$form_question->add(
+   array_merge($template_question, [
+      'name'                           => 'Struttura',
+      'fieldtype'                      => 'text',
+      'plugin_formcreator_sections_id' => $section_verbale_id,
+      'description'=> '&lt;p&gt;Struttura dove si trovano le apparecchiature da dismettere&lt;/p&gt;'
+   ])
+);
+
+#
+# AGGIUNGO LE SEZIONI APPARECCHIATURA
+#
 # Tengo traccia delle questions Marca, perche' mi serve la Marca della sezione precedente
 # per la condizione di visualizzazione della sezione successiva
 $qids_marca = [];
